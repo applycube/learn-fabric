@@ -1,0 +1,43 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+##############################################################################
+#                                                                            #
+# Author :       Falix Chong                                                 #
+# Created on :   16 Aug 2017                                                 #
+# Description :  HL Couchdb docker settings                                  #
+#                                                                            #
+##############################################################################
+#                                                                            #
+# Version History :                                                          #
+# 16 Aug 2017: Initial Version                                               #
+#                                                                            #
+##############################################################################
+
+version: '2'
+
+networks:
+  mufg:
+
+services:
+
+  couchdb3:
+    container_name: couchdb3
+    image: ibmblockchain/fabric-couchdb
+    volumes:
+      - /var/hyperledger/couchdb3:/opt/couchdb/data
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "7984:5984"
+    networks:
+      - mufg
+
+  peer1.org3.sla.mufg.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb3:5984
+    depends_on:
+      - couchdb3

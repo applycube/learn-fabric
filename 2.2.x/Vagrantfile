@@ -1,0 +1,65 @@
+# Copyright IBM Corp All Rights Reserved
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# This vagrantfile creates a VM that is capable of building and testing
+# the fabric core.
+
+Vagrant.require_version ">= 1.7.4"
+Vagrant.configure('2') do |config|
+  config.vm.box = "bento/ubuntu-20.04"
+  config.vm.synced_folder "..", "/home/vagrant/fabric"
+  config.ssh.forward_agent = true
+
+  config.vm.provider :virtualbox do |vb|
+    vb.name = "hyperledger"
+    vb.cpus = 2
+    vb.memory = 4096
+  end
+
+  config.vm.provision :shell, name: "essentials", path: "essentials.sh"
+  config.vm.provision :shell, name: "docker", path: "docker.sh"
+  config.vm.provision :shell, name: "golang", path: "golang.sh"
+  config.vm.provision :shell, name: "limits", path: "limits.sh"
+  config.vm.provision :shell, name: "softhsm", path: "softhsm.sh"
+  config.vm.provision :shell, name: "user", privileged: false, path: "user.sh"
+  
+  config.vm.network :forwarded_port, guest: 7056, host: 7056, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7058, host: 7058, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 8051, host: 8051, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 8053, host: 8053, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 8054, host: 8054, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 8056, host: 8056, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 8058, host: 8058, host_ip: "localhost", auto_correct: true
+  
+  # Composer - Start  
+  config.vm.network :forwarded_port, guest: 7501, host: 7501, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7502, host: 7502, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7503, host: 7503, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7504, host: 7504, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7505, host: 7505, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7506, host: 7506, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7507, host: 7507, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7508, host: 7508, host_ip: "localhost", auto_correct: true
+  
+  config.vm.network :forwarded_port, guest: 8080, host: 8080, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 3000, host: 3000, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 4200, host: 4200, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7070, host: 7070, host_ip: "localhost", auto_correct: true
+  
+  
+  config.vm.network :forwarded_port, guest: 7050, host: 7050, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7051, host: 7051, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 7054, host: 7054, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 8054, host: 8054, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 9051, host: 9051, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 9054, host: 9054, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 9443, host: 9443, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 9444, host: 9444, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 17054, host: 17054, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 18054, host: 18054, host_ip: "localhost", auto_correct: true
+  config.vm.network :forwarded_port, guest: 19054, host: 19054, host_ip: "localhost", auto_correct: true
+end
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :

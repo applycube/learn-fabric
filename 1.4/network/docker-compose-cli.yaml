@@ -1,0 +1,55 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+
+##############################################################################
+#                                                                            #
+# Author :       Falix Chong                                                 #
+# Created on :   16 Aug 2017                                                 #
+# Description :  HL Peers and CLI docker settings                            #
+#                                                                            #
+##############################################################################
+#                                                                            #
+# Version History :                                                          #
+# 16 Aug 2017: Initial Version                                               #
+#                                                                            #
+##############################################################################
+
+
+version: '2'
+
+networks:
+  mufg:
+
+services:
+
+  cli:
+    container_name: cli
+    image: ibmblockchain/fabric-tools
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CHANNEL_NAME=mufgslachannel
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer1.org1.sla.mufg.com:7051
+      - CORE_PEER_LOCALMSPID=MUFGSLApeerorg1
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.sla.mufg.com/peers/peer1.org1.sla.mufg.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.sla.mufg.com/peers/peer1.org1.sla.mufg.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.sla.mufg.com/peers/peer1.org1.sla.mufg.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.sla.mufg.com/users/Admin@org1.sla.mufg.com/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    #command: /bin/bash -c './scripts/script.sh ${CHANNEL_NAME}; sleep $TIMEOUT'
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./../chaincode/:/opt/gopath/src/github.com/hyperledger/fabric/examples/chaincode/go
+        - ./../chaincode/src/:/opt/gopath/src/
+        - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+    networks:
+      - mufg

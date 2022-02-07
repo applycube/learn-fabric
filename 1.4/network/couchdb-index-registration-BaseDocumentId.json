@@ -1,0 +1,7 @@
+{
+    "index": {
+        "fields": ["data.BaseDocumentId"]
+    },
+    "name" : "mufgslacc-index",
+    "type" : "json"
+}

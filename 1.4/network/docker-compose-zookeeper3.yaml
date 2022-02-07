@@ -1,0 +1,40 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+
+##############################################################################
+#                                                                            #
+# Author :       Falix Chong                                                 #
+# Created on :   16 Aug 2017                                                 #
+# Description :  HL Orderer, kafka and zookeeper docker settings             #
+#                                                                            #
+##############################################################################
+#                                                                            #
+# Version History :                                                          #
+# 16 Aug 2017: Initial Version                                               #
+#                                                                            #
+##############################################################################
+
+
+version: '2'
+
+networks:
+  mufg:
+
+services:
+
+  zookeeper3:
+    image: ibmblockchain/fabric-zookeeper
+    restart: always
+    environment:
+      - JVMFLAGS=-Xmx2048m -Xms256m
+      - ZOO_MY_ID=3
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+    ports:
+      - "4181:2181"
+      - "6888:2888"
+      - "7888:3888"
+    networks:
+      - mufg

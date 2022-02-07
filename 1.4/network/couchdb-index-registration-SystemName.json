@@ -1,0 +1,7 @@
+{
+    "index": {
+        "fields": ["data.SystemName"]
+    },
+    "name" : "mufgslacc-index",
+    "type" : "json"
+}

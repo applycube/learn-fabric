@@ -1,0 +1,57 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+
+##############################################################################
+#                                                                            #
+# Author :       Falix Chong                                                 #
+# Created on :   16 Aug 2017                                                 #
+# Description :  HL Orderer, kafka and zookeeper docker settings             #
+#                                                                            #
+##############################################################################
+#                                                                            #
+# Version History :                                                          #
+# 16 Aug 2017: Initial Version                                               #
+#                                                                            #
+##############################################################################
+
+
+version: '2'
+
+networks:
+  mufg:
+
+services:
+    
+  orderer1.sla.mufg.com:
+    container_name: orderer1.sla.mufg.com
+    image: ibmblockchain/fabric-orderer
+    restart: always
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=debug
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=MUFGSLAordererorg
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s
+      - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s
+      - ORDERER_KAFKA_VERBOSE=true
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    volumes:
+    - /var/hyperledger/orderer1:/var/hyperledger/production/orderer  
+    - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./crypto-config/ordererOrganizations/sla.mufg.com/orderers/orderer1.sla.mufg.com/msp:/var/hyperledger/orderer/msp
+    - ./crypto-config/ordererOrganizations/sla.mufg.com/orderers/orderer1.sla.mufg.com/tls/:/var/hyperledger/orderer/tls
+    ports:
+      - 7050:7050
+    networks:
+      - mufg

@@ -1,0 +1,42 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+
+##############################################################################
+#                                                                            #
+# Author :       Falix Chong                                                 #
+# Created on :   16 Aug 2017                                                 #
+# Description :  HL Orderer, kafka and zookeeper docker settings             #
+#                                                                            #
+##############################################################################
+#                                                                            #
+# Version History :                                                          #
+# 16 Aug 2017: Initial Version                                               #
+#                                                                            #
+##############################################################################
+
+
+version: '2'
+
+networks:
+  mufg:
+
+services:
+  
+  kafka4:
+    image: ibmblockchain/fabric-kafka
+    restart: always
+    environment:
+      - KAFKA_BROKER_ID=4
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      - KAFKA_MESSAGE_MAX_BYTES=103809024 # 99 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024 # 99 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+    ports:
+      - "12092:9092"
+    networks:
+      - mufg

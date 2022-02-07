@@ -1,0 +1,54 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+
+##############################################################################
+#                                                                            #
+# Author :       Falix Chong                                                 #
+# Created on :   16 Aug 2017                                                 #
+# Description :  HL Orderer, kafka and zookeeper docker settings             #
+#                                                                            #
+##############################################################################
+#                                                                            #
+# Version History :                                                          #
+# 16 Aug 2017: Initial Version                                               #
+#                                                                            #
+##############################################################################
+
+
+version: '2'
+
+networks:
+  mufg:
+
+services:
+
+  zookeeper1:
+    image: ibmblockchain/fabric-zookeeper
+    restart: always
+    environment:
+      - JVMFLAGS=-Xmx2048m -Xms256m
+      # ========================================================================
+      #     Reference: https://zookeeper.apache.org/doc/r3.4.9/zookeeperAdmin.html#sc_configuration
+      # ========================================================================
+      #
+      # myid
+      # The ID must be unique within the ensemble and should have a value
+      # between 1 and 255.
+      - ZOO_MY_ID=1
+      #
+      # server.x=[hostname]:nnnnn[:nnnnn]
+      # The list of servers that make up the ZK ensemble. The list that is used
+      # by the clients must match the list of ZooKeeper servers that each ZK
+      # server has. There are two port numbers `nnnnn`. The first is what
+      # followers use to connect to the leader, while the second is for leader
+      # election.
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    networks:
+      - mufg

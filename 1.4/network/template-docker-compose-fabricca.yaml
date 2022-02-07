@@ -1,0 +1,42 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+##############################################################################
+#                                                                            #
+# Author :       Falix Chong                                                 #
+# Created on :   16 Aug 2017                                                 #
+# Description :  Template HL Fabric-ca docker settings                       #
+#                                                                            #
+##############################################################################
+#                                                                            #
+# Version History :                                                          #
+# 16 Aug 2017: Initial Version                                               #
+#                                                                            #
+##############################################################################
+
+version: '2'
+
+networks:
+  mufg:
+
+services:
+
+  ca1:
+    image: ibmblockchain/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-org1
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.userorg.sla.mufg.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA_PRIVATE_KEY
+    ports:
+      - "7054:7054"
+    #command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.userorg.sla.mufg.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/CA_PRIVATE_KEY -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/userorg.sla.mufg.com/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ./fabricca-config/:/etc/hyperledger/fabric-ca-server
+    container_name: userorg_fabricca
+    networks:
+      - mufg
